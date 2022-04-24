@@ -1,17 +1,15 @@
 package com.ninety8point6.moviequest
 
-import android.util.Log
 import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.runner.AndroidJUnit4
-import com.ninety8point6.moviequest.data.MovieSource
 import com.ninety8point6.moviequest.data.MoviesHttpClient
+import com.ninety8point6.moviequest.data.client.MovieSource
 import io.ktor.client.request.*
 import io.ktor.client.statement.*
 import kotlinx.coroutines.runBlocking
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.junit.Assert.*
-import org.junit.Before
 
 
 /**
@@ -31,8 +29,10 @@ class ExampleInstrumentedTest {
     @Test
     fun testHttpRequest() {
         val movieSource = MovieSource()
-        assert(movieSource.popularMovieResultsList != null)
+        assert(movieSource.popularMovieResultsList.isNotEmpty())
     }
+
+
 
     @Test
     fun getTest(){
