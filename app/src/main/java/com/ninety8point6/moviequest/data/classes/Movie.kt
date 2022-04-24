@@ -1,4 +1,4 @@
-package com.ninety8point6.moviequest.data
+package com.ninety8point6.moviequest.data.classes
 
 
 data class Movie(

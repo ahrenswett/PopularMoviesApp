@@ -6,9 +6,16 @@ import android.webkit.WebView
 import android.webkit.WebViewClient
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.foundation.layout.*
+import androidx.compose.material.Button
+import androidx.compose.material.Text
 import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
-import com.ninety8point6.moviequest.ui.composables.BuyMovie
+import com.ninety8point6.moviequest.ui.composables.movieList.GetMoviePoster
 import com.ninety8point6.moviequest.ui.theme.BuyMovieTheme
 
 var movieIdToLookAt = -1
@@ -28,7 +35,6 @@ class BuyMovieActivity : ComponentActivity() {
     }
 }
 
-
 @Composable
 fun ShowMovie(movieIndex: Int){
     var goToBuyMovie by remember { mutableStateOf(false) }
@@ -36,6 +42,35 @@ fun ShowMovie(movieIndex: Int){
 
     if(!goToBuyMovie) BuyMovie(movieIndex){goToBuyMovie = true}
     else WebViewComp(url = "https://www.google.com/search?q=${movie.title.replace(" ","+")}&")
+}
+
+
+@Composable
+fun BuyMovie(movieIndex: Int, onContinueClicked: () -> Unit){
+    val movie = movieSource.popularMovieResultsList[movieIndex]
+    val title = movie.title
+    val poster = movie.poster_path
+    val  overview = movie.overview
+
+    Column(modifier= Modifier.fillMaxSize(), verticalArrangement = Arrangement.Center, horizontalAlignment = Alignment.CenterHorizontally ) {
+//           GetMoviePoster(movieTitle = title, moviePoster = poster, "original")
+
+        Row(modifier = Modifier.fillMaxWidth()) {
+            GetMoviePoster(movieTitle = title, moviePoster = poster, "original")
+        }
+
+        Spacer(modifier = Modifier.width(5.dp))
+
+        Row(modifier = Modifier.padding(10.dp)){
+            Text(text = overview, textAlign = TextAlign.Justify)
+        }
+
+//       Reload with search results (Hoist WebViewComp to current composition)
+        Button(onClick = onContinueClicked
+        ){
+            Text(text = "Get Tickets!")
+        }
+    }
 }
 
 @Composable

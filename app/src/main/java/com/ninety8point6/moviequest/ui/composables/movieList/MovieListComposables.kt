@@ -1,7 +1,6 @@
 package com.ninety8point6.moviequest.ui.composables.movieList
 
 import android.content.Intent
-import android.os.Bundle
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -16,10 +15,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
-import androidx.core.os.bundleOf
 import coil.compose.SubcomposeAsyncImage
 import com.ninety8point6.moviequest.BuyMovieActivity
-import com.ninety8point6.moviequest.data.Movie
+import com.ninety8point6.moviequest.data.classes.Movie
 import com.ninety8point6.moviequest.movieSource
 
 
@@ -56,13 +54,6 @@ fun MovieCard(movie: Movie){
         backgroundColor =  Color.LightGray,
     ){
         Row(modifier = Modifier.clickable {
-            //Could also just pass the position of the Movie in the source list and get info this is to show I know about bundles
-//            var movieBundle : Bundle = bundleOf(
-//                "MOVIE_TITLE" to movie.title,
-//                "OVERVIEW" to movie.overview,
-//                "POSTER_PATH" to movie.poster_path,
-//                "LIST_INDEX" to movieSource.popularMovieResultsList.indexOf(movie))
-            //Movie selected! Go to the info/buy page
             context.startActivity(Intent(context, BuyMovieActivity::class.java).putExtra("LIST_INDEX",movieSource.popularMovieResultsList.indexOf(movie)))
                                           }
             ,verticalAlignment = Alignment.CenterVertically){
