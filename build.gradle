@@ -1,0 +1,39 @@
+apply plugin: Plugins.gradleVersionPlugin
+
+ext {
+    compose_version = '1.1.1'
+    ktor_version = '2.0.0'
+}
+
+buildscript {
+    repositories {
+        google()
+        jcenter()
+        mavenCentral()
+    }
+
+    dependencies {
+        classpath Classpaths.gradleClasspath
+        classpath Classpaths.kotlinGradleClasspath
+        classpath Classpaths.gradleVersionPlugin
+        classpath 'org.jetbrains.kotlin:kotlin-gradle-plugin:1.5.21'
+    }
+}
+
+allprojects {
+    repositories {
+        google()
+        mavenCentral()
+        maven { url 'https://jitpack.io' }
+    }
+}
+
+task clean(type: Delete) {
+    delete rootProject.buildDir
+}
+
+task {
+    dependencyUpdates {
+        checkConstraints = true
+    }
+}

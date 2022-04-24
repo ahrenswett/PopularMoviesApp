@@ -1,0 +1,113 @@
+apply plugin: Plugins.androidApplication
+apply plugin: Plugins.kotlinAndroid
+apply plugin: Plugins.kotlinKapt
+apply plugin: 'kotlin-android'
+
+
+android {
+    compileSdkVersion Configs.compileSdkVersion
+
+    defaultConfig {
+        applicationId Configs.applicationId
+        minSdkVersion Configs.minSdkVersion
+        targetSdkVersion Configs.targetSdkVersion
+        versionCode Configs.versionCode
+        versionName Configs.versionName
+
+        testInstrumentationRunner Configs.testInstrumentationRunner
+        vectorDrawables {
+            useSupportLibrary true
+        }
+    }
+
+    dataBinding {
+        enabled = true
+    }
+
+    buildFeatures {
+        compose true
+    }
+    composeOptions {
+        kotlinCompilerExtensionVersion compose_version
+        kotlinCompilerVersion '1.5.21'
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+    kotlinOptions {
+        jvmTarget = '1.8'
+        useIR = true
+    }
+    packagingOptions {
+        resources {
+            excludes += '/META-INF/{AL2.0,LGPL2.1}'
+        }
+    }
+}
+
+dependencies {
+    // coil
+    implementation("io.coil-kt:coil-compose:2.0.0-rc01")
+    //Gson
+    implementation 'com.google.code.gson:gson:2.9.0'
+    //ktor
+    implementation("io.ktor:ktor-client-okhttp:$ktor_version")
+
+    implementation 'androidx.core:core-ktx:1.7.0'
+    implementation 'androidx.appcompat:appcompat:1.4.1'
+    implementation 'com.google.android.material:material:1.5.0'
+    implementation "androidx.compose.ui:ui:$compose_version"
+    implementation "androidx.compose.material:material:$compose_version"
+    implementation "androidx.compose.ui:ui-tooling-preview:$compose_version"
+    implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.4.1'
+    implementation 'androidx.activity:activity-compose:1.4.0'
+    testImplementation 'junit:junit:4.+'
+    androidTestImplementation 'androidx.test.ext:junit:1.1.3'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'
+    androidTestImplementation "androidx.compose.ui:ui-test-junit4:$compose_version"
+    debugImplementation "androidx.compose.ui:ui-tooling:$compose_version"
+
+    implementation Dependencies.kotlin
+    implementation Dependencies.appcompat
+    implementation Dependencies.material
+    implementation Dependencies.constraintLayout
+
+    // dagger
+    implementation Dependencies.dagger
+    implementation Dependencies.daggerAndroid
+    kapt Dependencies.daggerCompiler
+    kapt Dependencies.daggerProcessor
+
+    // Retrofit & Gson.
+    implementation Dependencies.retrofit
+    implementation Dependencies.retrofitGsonConverter
+    implementation Dependencies.retrofitRxJavaAdapter
+    implementation Dependencies.okhttp
+
+    // support
+    implementation Dependencies.recyclerView
+
+    //rxjava
+    implementation Dependencies.rxAndroid
+    implementation Dependencies.rxJava
+
+    //glide
+    implementation Dependencies.glide
+    kapt Dependencies.glideCompiler
+
+    // Testing
+    androidTestImplementation Dependencies.androidxTestRunner
+    androidTestImplementation Dependencies.espressoCore
+    testImplementation Dependencies.truthExt
+    testImplementation Dependencies.mockK
+    testImplementation Dependencies.coreTesting
+    testImplementation Dependencies.junit
+}
