@@ -8,7 +8,6 @@ import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Preview
-import com.ninety8point6.moviequest.ui.composables.WebViewComp
 import com.ninety8point6.moviequest.ui.theme.BuyMovieTheme
 
 class WebView : ComponentActivity() {

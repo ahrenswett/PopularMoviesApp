@@ -43,41 +43,24 @@ fun App(){
       MovieList(movieList = movieList)
 }
 
-@Composable
-fun ShowMovie(bundle: Bundle?){
-    var goToBuyMovie by remember { mutableStateOf(false)}
-
-    val title : String = bundle?.get("MOVIE_TITLE") as String
-    val url = "https://www.google.com/search?q=${title.replace(" ","+")}&"
-
-    if( !goToBuyMovie ) {
-        BuyMovie(bundle = bundle, { goToBuyMovie = true })
-    }
-    else WebViewComp(url = url)
-}
 
 @Composable
-fun BuyMovie(bundle: Bundle, onContinueClicked: () -> Unit){
+fun BuyMovie(movieIndex: Int, onContinueClicked: () -> Unit){
     val context = LocalContext.current
-    Log.i("MOVIE_TITLE", "${bundle?.get("MOVIE_TITLE")}")
-    val title : String = bundle?.get("MOVIE_TITLE") as String
-    val poster : String = bundle?.get("POSTER_PATH") as String
-    val  overview : String = bundle?.get("OVERVIEW") as String
+    val movie = movieSource.popularMovieResultsList[movieIndex]
+    val title = movie.title
+    val poster = movie.poster_path
+    val  overview = movie.overview
 
-   Surface() {
-       Column(modifier= Modifier.fillMaxSize(), verticalArrangement = Arrangement.Center, horizontalAlignment = Alignment.CenterHorizontally ) {
+   Column(modifier= Modifier.fillMaxSize(), verticalArrangement = Arrangement.Center, horizontalAlignment = Alignment.CenterHorizontally ) {
 //           GetMoviePoster(movieTitle = title, moviePoster = poster, "original")
-           Row(modifier = Modifier.fillMaxWidth()) {
-               GetMoviePoster(movieTitle = title, moviePoster = poster, "original")
-           }
-           Button(onClick = {
-//               FixMe
-               onContinueClicked
-//               var url = "https://www.google.com/search?q=${title.replace(" ","+")}&"
-               context.startActivity(Intent(context, BuyMovieActivity::class.java))
-           }){
-                Text(text = "Buy Movie!")
-           }
+       Row(modifier = Modifier.fillMaxWidth()) {
+           GetMoviePoster(movieTitle = title, moviePoster = poster, "original")
+       }
+//       Reload with search results
+       Button(onClick = onContinueClicked
+       ){
+            Text(text = "Buy Movie!")
        }
    }
     Surface(modifier = Modifier
@@ -89,18 +72,5 @@ fun BuyMovie(bundle: Bundle, onContinueClicked: () -> Unit){
     }
 }
 
-@Composable
-fun WebViewComp(url: String){
-    AndroidView(factory = {
-        WebView(it).apply {
-            layoutParams = ViewGroup.LayoutParams(
-                ViewGroup.LayoutParams.MATCH_PARENT,
-                ViewGroup.LayoutParams.MATCH_PARENT
-            )
-            webViewClient = WebViewClient()
-            loadUrl(url)
-        }
-    }, update = {it.loadUrl(url)})
-}
 
 

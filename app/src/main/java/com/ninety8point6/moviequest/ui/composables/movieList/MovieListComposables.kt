@@ -20,42 +20,17 @@ import androidx.core.os.bundleOf
 import coil.compose.SubcomposeAsyncImage
 import com.ninety8point6.moviequest.BuyMovieActivity
 import com.ninety8point6.moviequest.data.Movie
+import com.ninety8point6.moviequest.movieSource
 
 
-// make a card to hold the movies
+
+//make a lazy column to generate cards like a recyclerview
 @Composable
-fun MovieCard(movie: Movie){
-    val context = LocalContext.current
-    // remember the state of card
-    Card(modifier = Modifier.padding(1.dp).fillMaxWidth(),
-        elevation = 5.dp,
-        backgroundColor =  Color.LightGray,
-    ){
-        Row(modifier = Modifier.clickable {
-            var movieBundle : Bundle = bundleOf(
-                "MOVIE_TITLE" to movie.title,
-                "OVERVIEW" to movie.overview,
-                "POSTER_PATH" to movie.poster_path)
-            context.startActivity(Intent(context, BuyMovieActivity::class.java).putExtra("MOVIE",movieBundle))
-            }
-
-            ,verticalAlignment = Alignment.CenterVertically) {
-            //column for movie picture
-            Column() {
-                GetMoviePoster(movieTitle = movie.title, moviePoster = movie.poster_path, size = "w200")
-            }
-            //Vertical spacing between text and thumbnail
-            Spacer(modifier = Modifier.width(8.dp))
-
-            //Column for movie title
-            Column() {
-                Text(text = movie.title, modifier = Modifier.padding(8.dp), style = MaterialTheme.typography.h5)
-            }
-        }
+fun MovieList(movieList: List<Movie>){
+    LazyColumn(Modifier.padding(5.dp)){
+        items(movieList){ movie-> MovieCard(movie = movie)}
     }
 }
-
-
 
 
 @Composable
@@ -71,10 +46,39 @@ fun GetMoviePoster(movieTitle: String, moviePoster : String, size: String) {
     )
 }
 
-//make a lazy column to generate cards like a recyclerview
+// make a card to hold the movies
 @Composable
-fun MovieList(movieList: List<Movie>){
-    LazyColumn(Modifier.padding(5.dp)){
-        items(movieList){ movie-> MovieCard(movie = movie)}
+fun MovieCard(movie: Movie){
+    val context = LocalContext.current
+    // remember the state of card
+    Card(modifier = Modifier.padding(1.dp).fillMaxWidth(),
+        elevation = 5.dp,
+        backgroundColor =  Color.LightGray,
+    ){
+        Row(modifier = Modifier.clickable {
+            //Could also just pass the position of the Movie in the source list and get info this is to show I know about bundles
+//            var movieBundle : Bundle = bundleOf(
+//                "MOVIE_TITLE" to movie.title,
+//                "OVERVIEW" to movie.overview,
+//                "POSTER_PATH" to movie.poster_path,
+//                "LIST_INDEX" to movieSource.popularMovieResultsList.indexOf(movie))
+            //Movie selected! Go to the info/buy page
+            context.startActivity(Intent(context, BuyMovieActivity::class.java).putExtra("LIST_INDEX",movieSource.popularMovieResultsList.indexOf(movie)))
+                                          }
+            ,verticalAlignment = Alignment.CenterVertically){
+            //column for movie picture
+            Column() {
+
+                GetMoviePoster(movieTitle = movie.title, moviePoster = movie.poster_path, size = "w200")
+            }
+            //Vertical spacing between text and thumbnail
+            Spacer(modifier = Modifier.width(8.dp))
+
+            //Column for movie title
+            Column() {
+                Text(text = movie.title, modifier = Modifier.padding(8.dp), style = MaterialTheme.typography.h5)
+            }
+        }
     }
 }
+

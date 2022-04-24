@@ -1,46 +1,53 @@
 package com.ninety8point6.moviequest
 
 import android.os.Bundle
-import android.util.Log
+import android.view.ViewGroup
+import android.webkit.WebView
+import android.webkit.WebViewClient
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Surface
-import androidx.compose.material.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.runtime.*
+import androidx.compose.ui.viewinterop.AndroidView
 import com.ninety8point6.moviequest.ui.composables.BuyMovie
-import com.ninety8point6.moviequest.ui.composables.ShowMovie
 import com.ninety8point6.moviequest.ui.theme.BuyMovieTheme
-import com.ninety8point6.moviequest.ui.theme.GetPopularMoviesTheme
 
+var movieIdToLookAt = -1
 
 class BuyMovieActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
+//        Check if coming from the listview or buy view if list save the extra
+        if(intent.extras != null) {
+            movieIdToLookAt =intent.extras?.get("LIST_INDEX") as Int
+        }
         setContent {
             BuyMovieTheme() {
-                // A surface container using the 'background' color from the theme
-                Surface(color = MaterialTheme.colors.background) {
-                    var movieBundle : Bundle? = intent.extras?.getBundle("MOVIE")
-                    Log.i("MOVIE_TITLE", "${movieBundle?.get("MOVIE_TITLE")}")
-                    ShowMovie(movieBundle!!)
-                }
+                ShowMovie(movieIdToLookAt)
             }
         }
     }
 }
 
+
 @Composable
-fun Greeting(name: String) {
-    Text(text = "Hello $name!")
+fun ShowMovie(movieIndex: Int){
+    var goToBuyMovie by remember { mutableStateOf(false) }
+    val movie = movieSource.popularMovieResultsList[movieIndex]
+
+    if(!goToBuyMovie) BuyMovie(movieIndex){goToBuyMovie = true}
+    else WebViewComp(url = "https://www.google.com/search?q=${movie.title.replace(" ","+")}&")
 }
 
-@Preview(showBackground = true)
 @Composable
-fun DefaultPreview() {
-    BuyMovieTheme {
-
-    }
+fun WebViewComp(url: String){
+    AndroidView(factory = {
+        WebView(it).apply {
+            layoutParams = ViewGroup.LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.MATCH_PARENT
+            )
+            webViewClient = WebViewClient()
+            loadUrl(url)
+        }
+    }, update = {it.loadUrl(url)})
 }
